@@ -1,0 +1,7 @@
+.R*
+statistical-rethinking.Rproj
+packrat
+packrat/lib*/
+.Rproj.user
+rescue-time-estimation.Rproj
+data
