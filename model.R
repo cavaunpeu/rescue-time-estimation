@@ -1,3 +1,5 @@
+library(rethinking)
+
 # load data
 weekly.percentages <- matrix(
   data = c(
@@ -17,27 +19,39 @@ weekly.percentages <- as.data.frame( t(weekly.percentages) )
 colnames(weekly.percentages) <- c("a", "b", "c", "d", "e")
 weekly.percentages <- do.call("rbind", replicate(n = 5, expr = weekly.percentages, simplify = FALSE))
 
-# fit a model for a
-library(rethinking)
-
-model.a <- map(
+model <- map2stan(
   alist(
-    a ~ dnorm(mean = mu.a, sd = sigma),
-    mu.a <- exp(phi.a) / ( exp(phi.a) + exp(phi.b) + exp(phi.c) + exp(phi.d) + exp(phi.e) ),
-    c(phi.a, phi.b, phi.c, phi.d, phi.e) ~ dnorm(mean = 0, sd = 1000),
-    sigma ~ dunif(min = 0, max = 10)
+    a ~ dnorm(mean = mu_a, sd = sigma),
+    b ~ dnorm(mean = mu_b, sd = sigma),
+    c ~ dnorm(mean = mu_c, sd = sigma),
+    d ~ dnorm(mean = mu_d, sd = sigma),
+    e <- 1 - a - b - c - d,
+    mu_a <- exp(phi_a) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
+    mu_b <- exp(phi_b) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
+    mu_c <- exp(phi_c) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
+    mu_d <- exp(phi_d) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
+    c(phi_a, phi_b, phi_c, phi_d, phi_e) ~ dnorm(mean = 0, sd = 1),
+    sigma ~ dunif(min = 0, max = 1)
   ),
-  data = weekly.percentages
+  data = weekly.percentages,
+  iter = 4000,
+  warmup = 1000
 )
 
-samples <- extract.samples(object = model.a, n = 500)
-# for now, you'll need to clip this below at 0, because some of the samples are negative, because you haven't yet done anything with b, c, d nor e
+plot(model)
 
-compute.predicted.a <- function(s) {
-  mu <- exp(s['phi.a']) / ( exp(s['phi.a']) + exp(s['phi.b']) + exp(s['phi.c']) + exp(s['phi.d']) + exp(s['phi.e']) )
-  prediction <- rnorm(n = 1, mean = mu, sd = s['sigma'])
-  return(prediction)
+posterior.samples <- extract.samples(model, n = 1e4)
+
+computePredictions <- function(s) {
+  exp.phi.a <- sapply(X = s["phi_a"], FUN = exp)
+  exp.phi.b <- sapply(X = s["phi_b"], FUN = exp)
+  exp.phi.c <- sapply(X = s["phi_c"], FUN = exp)
+  exp.phi.d <- sapply(X = s["phi_d"], FUN = exp)
+  exp.phi.e <- sapply(X = s["phi_e"], FUN = exp)
+  a <- as.vector( exp.phi.a / (exp.phi.a + exp.phi.b + exp.phi.c + exp.phi.d + exp.phi.e) )
+  b <- as.vector( exp.phi.b / (exp.phi.a + exp.phi.b + exp.phi.c + exp.phi.d + exp.phi.e) )
+  c <- as.vector( exp.phi.c / (exp.phi.a + exp.phi.b + exp.phi.c + exp.phi.d + exp.phi.e) )
+  d <- as.vector( exp.phi.d / (exp.phi.a + exp.phi.b + exp.phi.c + exp.phi.d + exp.phi.e) )
+  e <- 1 - a - b - c - d
+  return( data.frame(a=a, b=b, c=c, d=d, e=e))
 }
-
-posterior.predictive.distribution <- apply(X = samples, MARGIN = 1, FUN = function(s) compute.predicted.a(s))
-hist(posterior.predictive.distribution)
