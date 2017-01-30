@@ -1,12 +1,13 @@
 source("input.R")
+source("model.R")
+source("plot.R")
 
 library(shiny)
 
 ui <- fluidPage(
-  
-  # Application title
+
   titlePanel("Rescue Time Estimation"),
-  
+
   sidebarLayout(
     sidebarPanel(
       fileInput(
@@ -17,23 +18,27 @@ ui <- fluidPage(
       ),
       tags$hr()
     ),
-    
+
     mainPanel(
-      # plotOutput("dirichletPlot")
-      tableOutput("contents")
+      plotOutput("plotPanel")
     )
   )
 )
 
 server <- function(input, output) {
-  output$contents <- renderTable({
-    report <- input$rescue.time.report
-    
-    if ( is.null(report) )
+
+  output$plotPanel <- renderPlot({
+    rescue.time.report <- input$rescue.time.report
+
+    if ( is.null(rescue.time.report) )
       return(NULL)
-    
-    readReport(report$datapath)
+
+    report <- readReport(rescue.time.report$datapath)
+    model <- buildModel(report)
+    predictions <- simulatePredictions(model)
+    generatePlot(predictions)
   })
+
 }
 
 shinyApp(ui, server)
