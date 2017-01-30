@@ -1,3 +1,5 @@
+source("input.R")
+
 library(shiny)
 
 ui <- fluidPage(
@@ -30,7 +32,7 @@ server <- function(input, output) {
     if ( is.null(report) )
       return(NULL)
     
-    read.csv(report$datapath)
+    readReport(report$datapath)
   })
 }
 
