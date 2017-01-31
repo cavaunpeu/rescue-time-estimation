@@ -2,7 +2,6 @@ source("http://peterhaschke.com/Code/multiplot.R")
 
 lapply(c("dplyr", "ggplot2", "reshape2", "rethinking", "gridExtra"), require, character.only = TRUE)
 
-# report <- readReport("~/Downloads/RescueTime_Report_Productivity__by_week_2016-01-01.csv")
 # cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 castPredictionsToLong <- function(predictions) {

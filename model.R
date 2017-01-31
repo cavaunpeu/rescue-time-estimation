@@ -7,7 +7,7 @@ buildModel <- function(report, chains = 1, cores = 1) {
 }
 
 simulatePredictions <- function(model) {
-  posterior.samples <- extract.samples(model, n = 1e3)
+  posterior.samples <- as.data.frame(model)
   simulated.predictions <- computePredictions(posterior.samples)
   return( simulated.predictions )
 }
