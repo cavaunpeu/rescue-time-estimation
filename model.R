@@ -1,22 +1,9 @@
-library(rethinking)
+library(rstan)
 
-buildModel <- function(report) {
-  map2stan(
-    alist(
-      very_low ~ dnorm(mean = mu_a, sd = sigma),
-      low ~ dnorm(mean = mu_b, sd = sigma),
-      neutral ~ dnorm(mean = mu_c, sd = sigma),
-      high ~ dnorm(mean = mu_d, sd = sigma),
-      very_high <- 1 - very_low - low - neutral - high,
-      mu_a <- exp(phi_a) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
-      mu_b <- exp(phi_b) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
-      mu_c <- exp(phi_c) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
-      mu_d <- exp(phi_d) / ( exp(phi_a) + exp(phi_b) + exp(phi_c) + exp(phi_d) + exp(phi_e) ),
-        c(phi_a, phi_b, phi_c, phi_d, phi_e) ~ dnorm(mean = 0, sd = 1),
-      sigma ~ dunif(min = 0, max = 1)
-    ),
-    data = report
-  )
+buildModel <- function(report, chains = 1, cores = 1) {
+  data <- list(very_low = report$very_low, low = report$low, neutral = report$neutral, high = report$high, very_high = report$high, N = nrow(report))
+  model <- stan(file = "model.stan",  data = data, chains = chains, cores = cores)
+  return(model)
 }
 
 simulatePredictions <- function(model) {
