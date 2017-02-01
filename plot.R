@@ -21,6 +21,9 @@ preparePredictionsForDonutPlot <- function(predictions) {
 }
 
 generateDonutPlot <- function(predictions) {
+  # i'm not sure what's going on with the `geom_text` `x` and `y` parameters; in solution, I've left them as they are
+  # in the boilerplate code (http://www.r-graph-gallery.com/128-ring-or-donut-plot/), and added `axis.title.x = element_blank()` 
+  # and `axis.title.y = element_blank()` instead
   predictions.donut.plot <- preparePredictionsForDonutPlot(predictions)
   donut.plot <- ggplot(predictions.donut.plot, aes(fill=productivity_level, ymin = ymin, ymax = ymax, xmax = 4, xmin = 3)) +
     geom_rect(colour="grey30") +
@@ -31,7 +34,10 @@ generateDonutPlot <- function(predictions) {
     theme(panel.grid = element_blank()) +
     theme(axis.text = element_blank()) +
     theme(axis.ticks = element_blank()) +
-    labs(title="Customized ring plot")
+    theme(axis.title.x = element_blank()) +
+    theme(axis.title.y = element_blank()) +
+    labs(title="Productivity-Level Proportions") +
+    theme(plot.title = element_text(hjust = 0.5))
   return( donut.plot )
 }
 
