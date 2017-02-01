@@ -8,19 +8,17 @@ ui <- fluidPage(
 
   titlePanel("RescueTime Estimation"),
 
-  sidebarLayout(
-    fixedRow(
-      column(
-        width = 4,
+  fixedRow(
+    column(
+      width = 4,
+      wellPanel(
         h3("Download report"),
         style = "padding-left:31px",
         helpText(
           "Please download your week-level report at the following",
           tags$a(href="https://www.rescuetime.com/browse/productivity/by/week/for/the/year/of/2016-01-01", "link.")
-        )
-      ),
-      column(
-        width = 4,
+        ),
+        tags$hr(),
         h3("Upload report"),
         fileInput(
           inputId = "rescue.time.report",
@@ -29,15 +27,14 @@ ui <- fluidPage(
           accept = c("text/csv, text/comma-separated-values", ".csv")
         )
       ),
-      column(
-        width = 4,
+      wellPanel(
         h3("Code"),
         style = "padding-right:31px",
-        helpText("Voilà the", tags$a(href="http://wp.me/p4zXJT-fm", "code"), "and post for this project")
+        helpText("Voilà the", tags$a(href="http://wp.me/p4zXJT-fm", "code"), "and blog post accompanying this project.")
       )
     ),
-
-    mainPanel(
+    column(
+      width = 8,
       plotOutput("plotPanel", width="100%")
     )
   )
