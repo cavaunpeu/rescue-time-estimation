@@ -1,8 +1,8 @@
 library(rstan)
 
-buildModel <- function(report, chains = 1, cores = 1) {
+buildModel <- function(report, chains = 1, cores = 1, iter = 1000) {
   data <- list(very_low = report$very_low, low = report$low, neutral = report$neutral, high = report$high, very_high = report$high, N = nrow(report))
-  model <- stan(file = "model.stan",  data = data, chains = chains, cores = cores)
+  model <- stan(file = "model.stan",  data = data, chains = chains, cores = cores, iter = iter)
   return(model)
 }
 
