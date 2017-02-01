@@ -12,6 +12,13 @@ ui <- fluidPage(
     column(
       width = 4,
       wellPanel(
+        h3("What's this?"),
+        style = "padding-left:31px",
+        helpText("This is an application that ingests your week-level RescueTime productivity data and seeks to infer the expected value of a typical
+                 week. The result is a probability distribution across the proportion of your week you typically spend on", tags$i("Very Distracting,"), tags$i("Distracting,"), tags$i("Neutral,"),
+                 tags$i("Productive,"), "and", tags$i("Very Productive"), "activities.")
+      ),
+      wellPanel(
         h3("Download report"),
         style = "padding-left:31px",
         helpText(
