@@ -37,7 +37,8 @@ generateDonutPlot <- function(predictions) {
       axis.ticks = element_blank(),
       panel.border = element_blank(),
       axis.title.x = element_blank(),
-      axis.title.y = element_blank()
+      axis.title.y = element_blank(),
+      plot.title = element_text(size = 18)
     ) +
     labs(title="Expected Productivity-Level Proportions (MAP)") +
     theme(plot.title = element_text(hjust = 0.5))
@@ -51,7 +52,7 @@ generateFacetedHistogram <- function(predictions) {
     facet_wrap(~variable, ncol = 1) +
     labs(title = TeX("Posterior Distributions of Productivity-Level Proportions ($\\mu_i$)"), x = TeX('$\\mu_i$')) +
     theme(
-      plot.title = element_text(hjust = 0.5),
+      plot.title = element_text(hjust = 0.5, size = 18),
       legend.position = "none"
     ) +
     scale_x_continuous(breaks = seq(0, .65, .05))
