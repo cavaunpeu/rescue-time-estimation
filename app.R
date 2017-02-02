@@ -14,8 +14,8 @@ ui <- fluidPage(
       wellPanel(
         h3("What's this?"),
         helpText("This is an application that ingests week-level RescueTime productivity data then seeks to infer the expected value of a typical
-                 week. The result is a probability distribution across the proportion of your week you typically spend on", tags$i("Very Distracting,"), tags$i("Distracting,"), tags$i("Neutral,"),
-                 tags$i("Productive,"), "and", tags$i("Very Productive"), "activities.")
+                 week. The result is a probability distribution across the proportion of your week you typically spend on", tags$b("Very Distracting,"), tags$b("Distracting,"), tags$b("Neutral,"),
+                 tags$b("Productive,"), "and", tags$b("Very Productive"), "activities.")
       ),
       wellPanel(
         h3("Download report"),
