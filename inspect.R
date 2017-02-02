@@ -6,7 +6,7 @@ lapply(c("reshape2", "rstan", "tidyr", "latex2exp"), require, character.only = T
 
 # build model
 report <- readReport("~/Downloads/RescueTime_Report_Productivity__by_week_2016-01-01.csv")
-model <- buildModel(report, chains = 4, cores = 4)
+model <- buildModel(report, chains = 4, cores = 4, iter = 2000, warmup = 1000)
 predictions <- simulatePredictions(model)
 
 # create box plot

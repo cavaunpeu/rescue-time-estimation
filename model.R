@@ -1,6 +1,6 @@
 library(rstan)
 
-buildModel <- function(report, chains = 1, cores = 1, iter = 1000) {
+buildModel <- function(report, chains = 1, cores = 1, iter = 1000, warmup = 1000) {
   data <- list(very_distracting = report$very_distracting, distracting = report$distracting, neutral = report$neutral, productive = report$productive, very_productive = report$productive, N = nrow(report))
   model <- stan(file = "model.stan",  data = data, chains = chains, cores = cores, iter = iter)
   return(model)
