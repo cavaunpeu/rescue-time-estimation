@@ -2,7 +2,7 @@ source("input.R")
 source("model.R")
 source("plot.R")
 
-lapply(c("reshape2", "rstan", "latex2exp", "tidyr"), require, character.only = TRUE)
+lapply(c("reshape2", "rstan", "tidyr"), require, character.only = TRUE)
 
 # build model
 report <- readReport("~/Downloads/RescueTime_Report_Productivity__by_week_2016-01-01.csv")

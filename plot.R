@@ -1,8 +1,6 @@
 source("http://peterhaschke.com/Code/multiplot.R")
 
-lapply(c("dplyr", "ggplot2", "reshape2", "rethinking", "gridExtra"), require, character.only = TRUE)
-
-# cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+lapply(c("dplyr", "ggplot2", "reshape2", "rethinking", "gridExtra", "latex2exp"), require, character.only = TRUE)
 
 castPredictionsToLong <- function(predictions) {
   simulated.predictions.long <- melt( as.matrix(predictions) )
@@ -21,9 +19,11 @@ preparePredictionsForDonutPlot <- function(predictions) {
 }
 
 generateDonutPlot <- function(predictions) {
-  # i'm not sure what's going on with the `geom_text` `x` and `y` parameters; in solution, I've left them as they are
-  # in the boilerplate code (http://www.r-graph-gallery.com/128-ring-or-donut-plot/), and added `axis.title.x = element_blank()` 
-  # and `axis.title.y = element_blank()` instead
+  "
+  I'm not sure what's going on with the `geom_text` `x` and `y` parameters; in solution, I've left them as they are
+  in the boilerplate code (http://www.r-graph-gallery.com/128-ring-or-donut-plot/) and added `axis.title.x = element_blank()`
+  and `axis.title.y = element_blank()` instead.
+  "
   predictions.donut.plot <- preparePredictionsForDonutPlot(predictions)
   donut.plot <- ggplot(predictions.donut.plot, aes(fill=productivity_level, ymin = ymin, ymax = ymax, xmax = 4, xmin = 3)) +
     geom_rect(colour="grey30") +
@@ -31,23 +31,34 @@ generateDonutPlot <- function(predictions) {
     geom_text(aes(label = paste(mean*100, "%", sep=""), x = 3.5, y = (ymin+ymax)/2), show.legend = FALSE) +
     xlim(c(0, 4)) +
     theme_bw() +
-    theme(panel.grid = element_blank()) +
-    theme(axis.text = element_blank()) +
-    theme(axis.ticks = element_blank()) +
-    theme(axis.title.x = element_blank()) +
-    theme(axis.title.y = element_blank()) +
-    labs(title="Productivity-Level Proportions") +
+    theme(
+      panel.grid = element_blank(),
+      axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      panel.border = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank()
+    ) +
+    labs(title="Expected Productivity-Level Proportions (MAP)") +
     theme(plot.title = element_text(hjust = 0.5))
   return( donut.plot )
 }
 
-generatePlot <- function(predictions) {
-  histogram.very.low <- ggplot(predictions, aes(x=very_low)) + geom_histogram(colour = "white", fill = "#E69F00", binwidth = 0.0025) + geom_vline(xintercept=mean(predictions$very_low), color="red")
-  histogram.low <- ggplot(predictions, aes(x=low)) + geom_histogram(colour = "white", fill = "#56B4E9", binwidth = 0.0025)
-  histogram.neutral <- ggplot(predictions, aes(x=neutral)) + geom_histogram(colour = "white", fill = "#009E73", binwidth = 0.0025)
-  histogram.high <- ggplot(predictions, aes(x=high)) + geom_histogram(colour = "white", fill = "#F0E442", binwidth = 0.0025)
-  histogram.very.high <- ggplot(predictions, aes(x=very_high)) + geom_histogram(colour = "white", fill = "#0072B2", binwidth = 0.0025)
-  donut.plot <- generateDonutPlot(predictions)
+generateFacetedHistogram <- function(predictions) {
+  predictions.long <- melt(predictions)
+  ggplot(predictions.long, aes(x = value, fill = variable)) +
+    geom_histogram(binwidth = .003, colour = "black") +
+    facet_wrap(~variable, ncol = 1) +
+    labs(title = TeX("Posterior Distributions of Distinct Productivity-Level Proportions ($\\mu_i$)"), x = TeX('$\\mu_i$')) +
+    theme(
+      plot.title = element_text(hjust = 0.5),
+      legend.position = "none"
+    ) +
+    scale_x_continuous(breaks = seq(0, .65, .05))
+}
 
-  grid.arrange(histogram.very.low, donut.plot, histogram.low, histogram.neutral, histogram.high, histogram.very.high, nrow = 3, ncol = 2)
+generatePlot <- function(predictions) {
+  donut.plot <- generateDonutPlot(predictions)
+  faceted.histogram <- generateFacetedHistogram(predictions)
+  grid.arrange(donut.plot, faceted.histogram, nrow = 2, ncol = 1)
 }
