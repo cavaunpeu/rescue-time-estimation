@@ -23,7 +23,9 @@ ui <- fluidPage(
         style = "padding-left:31px",
         helpText(
           "Please download your week-level report at the following",
-          tags$a(href="https://www.rescuetime.com/browse/productivity/by/week/for/the/year/of/2016-01-01", "link.")
+          tags$a(href="https://www.rescuetime.com/browse/productivity/by/week/for/the/year/of/2016-01-01", "link."),
+          "Should you not have one, you're free to use",
+          tags$a(href="https://github.com/cavaunpeu/rescue-time-estimation/blob/publish/data/rescue_time_report.csv", "mine.")
         ),
         tags$hr(),
         h3("Upload report"),
@@ -37,7 +39,13 @@ ui <- fluidPage(
       wellPanel(
         h3("Documentation"),
         style = "padding-right:31px",
-        helpText("Voilà the", tags$a(href="http://wp.me/p4zXJT-fm", "code"), "and blog post accompanying this project.")
+        helpText(
+          "Voilà the",
+          tags$a(href="https://github.com/cavaunpeu/rescue-time-estimation", "code"),
+          "and",
+          tags$a(href="http://wp.me/p4zXJT-fm", "blog post"),
+          "accompanying this project."
+        )
       )
     ),
     column(
