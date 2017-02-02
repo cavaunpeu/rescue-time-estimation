@@ -1,6 +1,6 @@
 source("http://peterhaschke.com/Code/multiplot.R")
 
-lapply(c("dplyr", "ggplot2", "reshape2", "rethinking", "gridExtra", "latex2exp"), require, character.only = TRUE)
+lapply(c("dplyr", "ggplot2", "reshape2", "gridExtra", "latex2exp"), require, character.only = TRUE)
 
 castPredictionsToLong <- function(predictions) {
   simulated.predictions.long <- melt( as.matrix(predictions) )
