@@ -49,7 +49,7 @@ generateFacetedHistogram <- function(predictions) {
   ggplot(predictions.long, aes(x = value, fill = variable)) +
     geom_histogram(binwidth = .003, colour = "black") +
     facet_wrap(~variable, ncol = 1) +
-    labs(title = TeX("Posterior Distributions of Distinct Productivity-Level Proportions ($\\mu_i$)"), x = TeX('$\\mu_i$')) +
+    labs(title = TeX("Posterior Distributions of Productivity-Level Proportions ($\\mu_i$)"), x = TeX('$\\mu_i$')) +
     theme(
       plot.title = element_text(hjust = 0.5),
       legend.position = "none"

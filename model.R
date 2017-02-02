@@ -1,7 +1,7 @@
 library(rstan)
 
 buildModel <- function(report, chains = 1, cores = 1, iter = 1000) {
-  data <- list(very_low = report$very_low, low = report$low, neutral = report$neutral, high = report$high, very_high = report$high, N = nrow(report))
+  data <- list(very_distracting = report$very_distracting, distracting = report$distracting, neutral = report$neutral, productive = report$productive, very_productive = report$productive, N = nrow(report))
   model <- stan(file = "model.stan",  data = data, chains = chains, cores = cores, iter = iter)
   return(model)
 }
@@ -23,5 +23,5 @@ computePredictions <- function(s) {
   c <- as.vector( exp.phi.c / (exp.phi.a + exp.phi.b + exp.phi.c + exp.phi.d + exp.phi.e) )
   d <- as.vector( exp.phi.d / (exp.phi.a + exp.phi.b + exp.phi.c + exp.phi.d + exp.phi.e) )
   e <- 1 - a - b - c - d
-  return( data.frame(very_low = a, low = b, neutral = c, high = d, very_high = e) )
+  return( data.frame(very_distracting = a, distracting = b, neutral = c, productive = d, very_productive = e) )
 }

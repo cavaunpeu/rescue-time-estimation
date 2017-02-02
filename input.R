@@ -16,6 +16,6 @@ aggregateTimeAsPercentage <- function(report) {
 
 widenReport <- function(longReport) {
   report.wide <- spread(data = longReport, key = productivity_level, value = time_percentage)
-  report.wide <- rename(report.wide, very_low = `-2`, low = `-1`, neutral = `0`, high = `1`, very_high = `2`)
+  report.wide <- rename(report.wide, very_distracting = `-2`, distracting = `-1`, neutral = `0`, productive = `1`, very_productive = `2`)
   return( report.wide )
 }

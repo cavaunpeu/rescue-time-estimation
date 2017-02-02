@@ -1,9 +1,9 @@
 data {
     int<lower=1> N;
-    real very_low[N];
-    real low[N];
+    real very_distracting[N];
+    real distracting[N];
     real neutral[N];
-    real high[N];
+    real productive[N];
 }
 
 parameters {
@@ -33,8 +33,8 @@ model {
     phi_d ~ normal( 0 , 1 );
     phi_c ~ normal( 0 , 1 );
     phi_b ~ normal( 0 , 1 );
-    very_low ~ normal(mu_a, sigma);
-    low ~ normal(mu_b, sigma);
+    very_distracting ~ normal(mu_a, sigma);
+    distracting ~ normal(mu_b, sigma);
     neutral ~ normal(mu_c, sigma);
-    high ~ normal(mu_d, sigma);
+    productive ~ normal(mu_d, sigma);
 }
