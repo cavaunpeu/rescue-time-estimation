@@ -5,7 +5,7 @@ source("plot.R")
 lapply(c("reshape2", "rstan", "tidyr", "latex2exp"), require, character.only = TRUE)
 
 # build model
-report <- readReport("~/Downloads/RescueTime_Report_Productivity__by_week_2016-01-01.csv")
+report <- readReport("data/rescue_time_report.csv")
 model <- buildModel(report, chains = 4, cores = 4, iter = 2000, warmup = 1000)
 predictions <- simulatePredictions(model)
 
