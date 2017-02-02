@@ -35,7 +35,7 @@ ui <- fluidPage(
         )
       ),
       wellPanel(
-        h3("Code"),
+        h3("Documentation"),
         style = "padding-right:31px",
         helpText("Voilà the", tags$a(href="http://wp.me/p4zXJT-fm", "code"), "and blog post accompanying this project.")
       )
@@ -56,7 +56,7 @@ server <- function(input, output) {
       return(NULL)
 
     report <- readReport(rescue.time.report$datapath)
-    model <- buildModel(report)
+    model <- buildModel(report, iter = 4000)
     predictions <- simulatePredictions(model)
     generatePlot(predictions)
   })
