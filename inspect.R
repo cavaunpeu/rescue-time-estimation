@@ -3,9 +3,14 @@ source("model.R")
 source("plot.R")
 
 lapply(c("reshape2", "rstan", "tidyr", "latex2exp"), require, character.only = TRUE)
+rstan_options(auto_write = TRUE)
 
-# build model
+# build initial model
 report <- readReport("data/rescue_time_report.csv")
+data <- list(very_distracting = report$very_distracting, distracting = report$distracting, neutral = report$neutral, productive = report$productive, very_productive = report$productive, N = nrow(report))
+model <- stan(file = "model.stan", data = data, save_dso = FALSE, chains = 4, cores = 4, iter = 2000, warmup = 1000)
+
+# run 4 chains on initial model, generate predictions
 model <- buildModel(report, chains = 4, cores = 4, iter = 2000, warmup = 1000)
 predictions <- simulatePredictions(model)
 
