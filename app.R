@@ -2,7 +2,7 @@ source("input.R")
 source("model.R")
 source("plot.R")
 
-library(shiny)
+lapply(c("shiny", "RescueTimeEstimator"), require, character.only = TRUE)
 
 ui <- fluidPage(
 
@@ -61,7 +61,7 @@ server <- function(input, output) {
       return(NULL)
 
     report <- readReport(rescue.time.report$datapath)
-    model <- buildModel(report, iter = 4000)
+    model <- RescueTimeEstimator::buildModel(report, iter = 4000)
     predictions <- simulatePredictions(model)
     generatePlot(predictions)
   })
