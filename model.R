@@ -1,18 +1,9 @@
 library(rstan)
 
-buildModel <- function(report, chains = 1, cores = 1, iter = 1000, warmup = 1000, model.path = "model.rds") {
-  if (file.exists(model.path)) {
-    "
-    Here, I should be able to first load the model, then refit it with new parameters (cores, iters, etc.).
-    At present, I'm having trouble doing this.
-    "
-    model <- loadModel()
-  } else {
-    data <- list(very_distracting = report$very_distracting, distracting = report$distracting, neutral = report$neutral, productive = report$productive, very_productive = report$productive, N = nrow(report))
-    model <- stan(file = "model.stan",  data = data, chains = chains, cores = cores, iter = iter)
-    saveRDS(object = model, file = model.path)
-  }
-  return( model )
+buildModel <- function(report, chains = 1, cores = 1, iter = 1000, warmup = 1000) {
+  data <- list(very_distracting = report$very_distracting, distracting = report$distracting, neutral = report$neutral, productive = report$productive, very_productive = report$productive, N = nrow(report))
+  fit <- stan(file = "model.stan",  data = data, chains = chains, cores = cores, iter = iter, warmup = warmup)
+  return( fit )
 }
 
 loadModel <- function(path="model.rds") {
